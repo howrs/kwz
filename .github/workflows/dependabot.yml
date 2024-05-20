@@ -4,8 +4,10 @@ on:
   schedule:
     # Every weekday at 10pm UTC
     #  cron: '0 22 * * 0-4'
-    # Every Friday
-    - cron: "0 0 * * 5"
+
+    # Every 9AM on Monday KST
+    - cron: "0 0 * * 1"
+
   workflow_dispatch:
 
 jobs:
@@ -17,14 +19,13 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: oven-sh/setup-bun@main
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
         with:
-          bun-version: latest
+          node-version: latest
 
-      - uses: actions/checkout@master
-      # - run: rm -rf yarn.lock pnpm-lock.yaml bun.lockb
-      - run: bunx npm-check-updates -u
-      - run: bun i -f
+      - run: npm i -g pnpm yarn bun
+      - run: npx taze major -w -i
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@main
