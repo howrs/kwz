@@ -26,6 +26,8 @@ export type User = {
   encrypted: string
 }
 
+export const runtime = "edge"
+
 export default function Page() {
   const search = useSearchParams()
   const { push } = useRouter()
