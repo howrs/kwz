@@ -1,4 +1,4 @@
-import assert from "node:assert"
+import assert from "assert"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import type { Team } from "app/team/create/page"
 import { supa } from "lib/supabase/supa"

@@ -1,6 +1,6 @@
 "use client"
 
-import { valibotResolver } from "@hookform/resolvers/valibot"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
 import { Input } from "components/ui/input"
@@ -9,13 +9,13 @@ import { nanoid } from "lib/nanoid"
 import { supa } from "lib/supabase/supa"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
-import { type InferInput, minLength, object, pipe, string } from "valibot"
+import { z } from "zod"
 
-const schema = object({
-  name: pipe(string(), minLength(1)),
+const schema = z.object({
+  name: z.string(),
 })
 
-type FormSchema = InferInput<typeof schema>
+type FormSchema = z.infer<typeof schema>
 
 export type Team = {
   id: string
@@ -33,7 +33,7 @@ export default function Page() {
     formState: { isValid, isSubmitting },
     handleSubmit,
   } = useForm<FormSchema>({
-    resolver: valibotResolver(schema),
+    resolver: zodResolver(schema),
   })
 
   const onSubmit = handleSubmit(async ({ name }) => {

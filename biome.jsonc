@@ -12,7 +12,8 @@
         "useImportType": "error",
         "useSelfClosingElements": "warn",
         "noNonNullAssertion": "warn",
-        "noUselessElse": "off"
+        "noUselessElse": "off",
+        "useNodejsImportProtocol": "off"
       },
       "correctness": {
         "noUnusedVariables": "warn"

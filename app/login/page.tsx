@@ -1,27 +1,17 @@
 "use client"
 
-import { valibotResolver } from "@hookform/resolvers/valibot"
-import { client, parsers, server, utils } from "@passwordless-id/webauthn"
+import { client, parsers, utils } from "@passwordless-id/webauthn"
 import type { RegistrationEncoded } from "@passwordless-id/webauthn/dist/esm/types"
 import { useMutation } from "@tanstack/react-query"
 import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
-import { Input } from "components/ui/input"
-import { EncryptJWT, jwtDecrypt } from "jose"
+import { EncryptJWT } from "jose"
 import { idb } from "lib/idb"
 import { ls } from "lib/localStorage"
 import { supa } from "lib/supabase/supa"
 import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { type InferInput, object, pipe, string } from "valibot"
 import { generatePrivateKey } from "viem/accounts"
-
-const schema = object({
-  // id: pipe(string(), minLength(1)),
-})
-
-type FormSchema = InferInput<typeof schema>
 
 export type Payload = {
   pk: string
@@ -35,14 +25,6 @@ export type User = {
 
 export default function Page() {
   const { push } = useRouter()
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting, isValid },
-    setFocus,
-  } = useForm<FormSchema>({
-    resolver: valibotResolver(schema),
-  })
 
   const { mutateAsync: login, isPending } = useMutation({
     mutationFn: async () => {
@@ -107,28 +89,21 @@ export default function Page() {
     },
   })
 
-  const onSubmit = handleSubmit(async () => {
-    await login()
-  })
-
-  const isLoading = isPending || isSubmitting
+  const isLoading = isPending
 
   return (
-    <form
-      className="flex h-full flex-col items-center justify-center gap-4 p-2"
-      onSubmit={onSubmit}
-    >
+    <div className="flex h-full flex-col items-center justify-center gap-4 p-2">
       <h1>KWZ</h1>
-      {/* <Input
-          className="w-full text-center"
-          autoFocus
-          disabled={isLoading}
-          {...register("id")}
-          placeholder="id"
-        /> */}
-      <Button type="submit" disabled={isLoading} className="relative min-w-32">
+      <Button
+        type="submit"
+        disabled={isLoading}
+        className="relative min-w-32"
+        onClick={async () => {
+          await login()
+        }}
+      >
         {isLoading ? <Loader /> : "Continue"}
       </Button>
-    </form>
+    </div>
   )
 }
