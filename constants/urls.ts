@@ -1,1 +1,3 @@
-export const HOST = `kwz.how.rs`
+export const APP_NAME = `kwz`
+
+export const HOST = `${APP_NAME}.how.rs`

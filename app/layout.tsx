@@ -1,5 +1,7 @@
 import "app/globals.css"
+import { QueryProvider } from "components/QueryProvider"
 
+import { Toaster } from "components/ui/sonner"
 import { HOST } from "constants/urls"
 import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
@@ -40,7 +42,14 @@ export default function RootLayout({ children }: Props) {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </head>
-      <body>{children}</body>
+      <body className="flex justify-center">
+        <QueryProvider>
+          <main className="flex h-dvh w-full max-w-screen-sm justify-center">
+            {children}
+          </main>
+        </QueryProvider>
+        <Toaster richColors />
+      </body>
     </html>
   )
 }
