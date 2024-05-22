@@ -3,15 +3,17 @@
 import { client, parsers, utils } from "@passwordless-id/webauthn"
 import type { RegistrationEncoded } from "@passwordless-id/webauthn/dist/esm/types"
 import { useMutation } from "@tanstack/react-query"
+import type { Team } from "app/team/create/page"
 import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
 import { EncryptJWT } from "jose"
+import { assert } from "lib/assert"
 import { idb } from "lib/idb"
 import { ls } from "lib/localStorage"
 import { supa } from "lib/supabase/supa"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "sonner"
-import { generatePrivateKey } from "viem/accounts"
+import { generatePrivateKey, privateKeyToAddress } from "viem/accounts"
 
 export type Payload = {
   pk: string
@@ -20,11 +22,14 @@ export type Payload = {
 export type User = {
   id: string
   teamId?: string
+  address: string
   encrypted: string
 }
 
 export default function Page() {
+  const search = useSearchParams()
   const { push } = useRouter()
+  const teamId = search.get("teamId") ?? undefined
 
   const { mutateAsync: login, isPending } = useMutation({
     mutationFn: async () => {
@@ -39,7 +44,6 @@ export default function Page() {
 
         const parsed = parsers.parseRegistration(reg)
 
-        console.log(parsed)
         const { credential } = parsed
 
         const id = credential.id
@@ -47,9 +51,11 @@ export default function Page() {
         const secret = new Uint8Array(32)
         secret.set(new TextEncoder().encode(id))
 
-        const payload: Payload = {
-          pk: generatePrivateKey(),
-        }
+        const pk = generatePrivateKey()
+
+        const payload: Payload = { pk }
+
+        const address = privateKeyToAddress(pk)
 
         const encrypted = await new EncryptJWT(payload)
           .setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256" })
@@ -58,11 +64,26 @@ export default function Page() {
 
         const user: User = {
           id,
+          teamId,
+          address,
           encrypted,
         }
 
-        await supa.setItem(`user:${id}`, user)
-        await idb.setItem("auth", user)
+        if (teamId) {
+          const team = await supa.getItem<Team>(`team:${teamId}`)
+
+          assert(team, "Team not found")
+
+          await supa.setItem(`team:${teamId}`, {
+            ...team,
+            members: [...team.members, id],
+          })
+        }
+
+        await Promise.all([
+          supa.setItem(`user:${id}`, user),
+          idb.setItem("auth", user),
+        ])
 
         push("/team/create")
 
