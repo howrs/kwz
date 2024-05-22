@@ -104,7 +104,11 @@ export default function Page() {
 
       await idb.setItem("auth", user)
 
-      push("/team/create")
+      if (user.teamId) {
+        push(`/team/${user.teamId}`)
+      } else {
+        push("/team/create")
+      }
 
       return
     },
@@ -114,7 +118,7 @@ export default function Page() {
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 p-2">
-      <h1>KWZ</h1>
+      <h1 className="text-2xl">KWZ</h1>
       <Button
         type="submit"
         disabled={isLoading}

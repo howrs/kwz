@@ -1,7 +1,5 @@
-export default function Page() {
-  return (
-    <div className="flex h-dvh items-center justify-center p-2 text-2xl">
-      KWZ
-    </div>
-  )
+import { redirect } from "next/navigation"
+
+export default async function Page() {
+  redirect("/login")
 }
