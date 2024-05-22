@@ -1,7 +1,7 @@
-import assert from "assert"
 import { useQuery } from "@tanstack/react-query"
 import type { Payload, User } from "app/login/page"
 import { jwtDecrypt } from "jose"
+import { assert } from "lib/assert"
 import { idb } from "lib/idb"
 import { useRouter } from "next/navigation"
 

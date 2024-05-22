@@ -1,6 +1,6 @@
-import assert from "assert"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import type { Team } from "app/team/create/page"
+import { assert } from "lib/assert"
 import { supa } from "lib/supabase/supa"
 import { useParams } from "next/navigation"
 
