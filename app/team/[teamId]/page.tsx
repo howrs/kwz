@@ -5,6 +5,8 @@ import { cn } from "lib/utils"
 import { encode } from "uqr"
 import { getBaseURL } from "utils/getBaseURL"
 
+export const runtime = "edge"
+
 export default function Page() {
   const { team } = useTeam()
 
