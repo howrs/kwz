@@ -69,7 +69,7 @@ export default function Page() {
                     </div>
                   </div>
 
-                  <div className="flex h-full w-12 flex-col items-center justify-center gap-1">
+                  <div className="flex h-full min-w-12 flex-col items-center justify-center gap-1">
                     <Image
                       priority
                       className="size-7 rounded-full"

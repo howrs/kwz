@@ -8,7 +8,7 @@ type Params = Partial<User> & {
   role: User["role"]
 }
 
-export const newUser = async ({ id, role }: Params): Promise<User> => {
+export const newUser = async ({ id, teamId, role }: Params): Promise<User> => {
   const secret = new Uint8Array(32)
   secret.set(new TextEncoder().encode(id))
 
@@ -25,6 +25,7 @@ export const newUser = async ({ id, role }: Params): Promise<User> => {
 
   return {
     id,
+    teamId,
     address,
     role,
     encrypted,
