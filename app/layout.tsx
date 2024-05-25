@@ -56,7 +56,7 @@ export default function RootLayout({ children }: Props) {
       </head>
       <body className="flex justify-center">
         <Providers>
-          <main className="flex h-dvh w-full max-w-screen-sm justify-center">
+          <main className="flex h-dvh w-full max-w-screen-sm justify-center bg-background">
             {children}
             <Toaster richColors />
           </main>

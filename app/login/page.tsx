@@ -4,6 +4,7 @@ import { client, parsers, utils } from "@passwordless-id/webauthn"
 import type { RegistrationEncoded } from "@passwordless-id/webauthn/dist/esm/types"
 import { useMutation } from "@tanstack/react-query"
 import { getEmoji } from "app/team/[teamId]/qr/Avatar"
+import { Emoji } from "app/team/[teamId]/qr/Emoji"
 import type { Team } from "app/team/create/page"
 import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
@@ -130,17 +131,15 @@ export default function Page() {
   const isLoading = isPending
 
   return (
-    <div className="flex h-full w-full flex-col gap-12 p-2 pt-[30%]">
-      <h1 className="text-center font-ink text-3xl">Welcome to KWZ!</h1>
-      <Image
-        priority
-        unoptimized
-        src={`https://em-content.zobj.net/source/microsoft-teams/363/waving-hand_1f44b.png`}
-        className="mx-auto size-40"
-        width={120}
-        height={120}
-        alt="👋"
+    <div className="flex h-full w-full flex-col items-center gap-12 p-2 pt-[30%]">
+      <Emoji
+        u="man-running-light-skin-tone_1f3c3-1f3fb-200d-2642-fe0f"
+        className="size-40"
       />
+      <div className="flex items-center justify-center gap-3 text-center font-ink text-3xl">
+        <Emoji e="👋" n="waving-hand" className="size-10" />
+        <h1 className="my-auto mt-2">Welcome to KWZ!</h1>
+      </div>
       <Button
         type="submit"
         disabled={isLoading}

@@ -2,6 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query"
 import { Avatar } from "app/team/[teamId]/qr/Avatar"
+import { Emoji } from "app/team/[teamId]/qr/Emoji"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +26,13 @@ export function Header() {
 
   return (
     <header className="flex h-16 w-full items-center justify-between px-1">
-      <div></div>
+      <div className="flex items-center gap-2 px-3">
+        <Emoji
+          u="man-running-light-skin-tone_1f3c3-1f3fb-200d-2642-fe0f"
+          className="size-8"
+        />
+        <h1 className="font-ink text-3xl">KWZ</h1>
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar k={key} />
