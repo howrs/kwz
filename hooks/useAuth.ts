@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import type { Payload, User } from "app/login/page"
 import { jwtDecrypt } from "jose"
 import { assert } from "lib/assert"
 import { idb } from "lib/idb"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next-nprogress-bar"
 
 export const useAuth = () => {
   const { replace } = useRouter()
 
-  const { data, ...rest } = useQuery({
+  const { data, ...rest } = useSuspenseQuery({
     queryKey: ["auth"],
     queryFn: async () => {
       try {

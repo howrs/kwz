@@ -3,6 +3,7 @@
 import { client, parsers, utils } from "@passwordless-id/webauthn"
 import type { RegistrationEncoded } from "@passwordless-id/webauthn/dist/esm/types"
 import { useMutation } from "@tanstack/react-query"
+import { getEmoji } from "app/team/[teamId]/qr/Avatar"
 import type { Team } from "app/team/create/page"
 import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
@@ -11,7 +12,9 @@ import { assert } from "lib/assert"
 import { idb } from "lib/idb"
 import { ls } from "lib/localStorage"
 import { supa } from "lib/supabase/supa"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next-nprogress-bar"
+import Image from "next/image"
+import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 import { generatePrivateKey, privateKeyToAddress } from "viem/accounts"
 
@@ -29,6 +32,10 @@ export type User = {
 export const runtime = "edge"
 
 export default function Page() {
+  const pk = generatePrivateKey()
+
+  console.log({ pk })
+
   const search = useSearchParams()
   const { push } = useRouter()
   const teamId = search.get("teamId") ?? undefined
@@ -107,10 +114,14 @@ export default function Page() {
       await idb.setItem("auth", user)
 
       if (user.teamId) {
-        push(`/team/${user.teamId}`)
+        push(`/team/${user.teamId}/qr`)
       } else {
         push("/team/create")
       }
+
+      toast.success("Successfully logged in!", {
+        position: "top-center",
+      })
 
       return
     },
@@ -119,17 +130,26 @@ export default function Page() {
   const isLoading = isPending
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4 p-2">
-      <h1 className="text-2xl">KWZ</h1>
+    <div className="flex h-full w-full flex-col gap-12 p-2 pt-[30%]">
+      <h1 className="text-center font-ink text-3xl">Welcome to KWZ!</h1>
+      <Image
+        priority
+        unoptimized
+        src={`https://em-content.zobj.net/source/microsoft-teams/363/waving-hand_1f44b.png`}
+        className="mx-auto size-40"
+        width={120}
+        height={120}
+        alt="👋"
+      />
       <Button
         type="submit"
         disabled={isLoading}
-        className="relative min-w-32"
+        className="relative h-16 w-full text-3xl"
         onClick={async () => {
           await login()
         }}
       >
-        {isLoading ? <Loader /> : "Continue"}
+        {isLoading ? <Loader className="size-8" /> : "Continue"}
       </Button>
     </div>
   )

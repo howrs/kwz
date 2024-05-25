@@ -7,7 +7,8 @@ import { Input } from "components/ui/input"
 import { useAuth } from "hooks/useAuth"
 import { nanoid } from "lib/nanoid"
 import { supa } from "lib/supabase/supa"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next-nprogress-bar"
+import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -53,17 +54,39 @@ export default function Page() {
   })
 
   return (
-    <form className="flex flex-col gap-4 p-2" onSubmit={onSubmit}>
-      <h1 className="text-center text-2xl">Create Team</h1>
-      <Input
-        {...register("name")}
-        disabled={isSubmitting}
-        className="text-center text-lg"
-        placeholder="Team Name"
+    <form className="flex w-full flex-col gap-12 p-2" onSubmit={onSubmit}>
+      <h1 className="mt-[20%] text-center font-extrabold font-ink text-5xl">
+        Hello, parents!
+      </h1>
+      <Image
+        priority
+        unoptimized
+        src={`https://em-content.zobj.net/source/microsoft-teams/363/woman_light-skin-tone_1f469-1f3fb_1f3fb.png`}
+        className="mx-auto size-40"
+        width={120}
+        height={120}
+        alt="👋"
       />
-      <Button type="submit" disabled={!isValid || isSubmitting} className="">
-        {isSubmitting ? <Loader /> : "Create"}
-      </Button>
+      <h2 className="text-center font-ink text-3xl">
+        Let's create a team for your child!
+      </h2>
+      <div className="grid gap-4">
+        <Input
+          {...register("name")}
+          disabled={isSubmitting}
+          className="h-auto text-center text-2xl"
+          placeholder="Team Name"
+          // size={24}
+        />
+        <Button
+          type="submit"
+          disabled={!isValid || isSubmitting}
+          className="h-12 text-2xl"
+          size="lg"
+        >
+          {isSubmitting ? <Loader className="size-8" /> : "Create"}
+        </Button>
+      </div>
     </form>
   )
 }

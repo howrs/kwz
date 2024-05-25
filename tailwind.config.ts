@@ -20,6 +20,7 @@ export default {
       fontFamily: {
         sans: ["var(--font-geist-sans)"],
         mono: ["var(--font-geist-mono)"],
+        ink: ["KyoboHandwriting2023wsa", "InkLipquid"],
       },
       colors: {
         border: "hsl(var(--border))",

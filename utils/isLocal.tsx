@@ -5,5 +5,5 @@ export const isLocal = () => {
     return process.env.ENV === "local"
   }
 
-  return location.host.includes("localhost")
+  return globalThis.location.host.includes("localhost")
 }

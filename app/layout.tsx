@@ -1,6 +1,6 @@
 import "app/globals.css"
-import { QueryProvider } from "components/QueryProvider"
 
+import { Providers } from "components/Providers"
 import { Toaster } from "components/ui/sonner"
 import { HOST } from "constants/urls"
 import { GeistMono } from "geist/font/mono"
@@ -43,12 +43,12 @@ export default function RootLayout({ children }: Props) {
         />
       </head>
       <body className="flex justify-center">
-        <QueryProvider>
+        <Providers>
           <main className="flex h-dvh w-full max-w-screen-sm justify-center">
             {children}
+            <Toaster richColors />
           </main>
-        </QueryProvider>
-        <Toaster richColors />
+        </Providers>
       </body>
     </html>
   )
