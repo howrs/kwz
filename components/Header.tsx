@@ -7,39 +7,18 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "components/ui/dropdown-menu"
-import { DropdownMenuShortcut } from "components/ui/dropdown-menu"
 import { useAuth } from "hooks/useAuth"
+import { useTeam } from "hooks/useTeam"
 import { idb } from "lib/idb"
-import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  QrCode,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-  Wallet,
-  Wallet2,
-} from "lucide-react"
+import { LogOut, QrCode, Wallet } from "lucide-react"
+import Link from "next/link"
 
 export function Header() {
   const { user } = useAuth()
+  const { team } = useTeam()
 
   const key = user.id.slice(0, 100)
   const client = useQueryClient()
@@ -52,16 +31,18 @@ export function Header() {
           <Avatar k={key} />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-auto" align="end">
-          {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator /> */}
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <Wallet className="mr-2 h-4 w-4" />
-              <span>Wallet</span>
+            <DropdownMenuItem asChild>
+              <Link href={`/team/${team.id}/wallet`}>
+                <Wallet className="mr-2 h-4 w-4" />
+                <span>Wallet</span>
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <QrCode className="mr-2 h-4 w-4" />
-              <span>QR Code</span>
+            <DropdownMenuItem asChild>
+              <Link href={`/team/${team.id}/qr`}>
+                <QrCode className="mr-2 h-4 w-4" />
+                <span>QR Code</span>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

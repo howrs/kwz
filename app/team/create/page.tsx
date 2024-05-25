@@ -50,7 +50,7 @@ export default function Page() {
       supa.setItem(`user:${user.id}`, { ...user, teamId: team.id }),
     ])
 
-    push(`/team/${team.id}`)
+    push(`/team/${team.id}/qr`)
   })
 
   return (
@@ -68,7 +68,9 @@ export default function Page() {
         alt="👋"
       />
       <h2 className="text-center font-ink text-3xl">
-        Let's create a team for your child!
+        Let's create a team
+        <br />
+        for your child!
       </h2>
       <div className="grid gap-4">
         <Input
