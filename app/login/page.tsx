@@ -3,40 +3,27 @@
 import { client, parsers, utils } from "@passwordless-id/webauthn"
 import type { RegistrationEncoded } from "@passwordless-id/webauthn/dist/esm/types"
 import { useMutation } from "@tanstack/react-query"
-import { getEmoji } from "app/team/[teamId]/qr/Avatar"
 import { Emoji } from "app/team/[teamId]/qr/Emoji"
-import type { Team } from "app/team/create/page"
 import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
-import { EncryptJWT } from "jose"
 import { assert } from "lib/assert"
 import { idb } from "lib/idb"
 import { ls } from "lib/localStorage"
 import { supa } from "lib/supabase/supa"
+import type { Team } from "model/Team/Team"
+import { ROLE, type User } from "model/User/User"
+import { newUser } from "model/User/newUser"
 import { useRouter } from "next-nprogress-bar"
-import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
-import { generatePrivateKey, privateKeyToAddress } from "viem/accounts"
 
 export type Payload = {
   pk: string
 }
 
-export type User = {
-  id: string
-  teamId?: string
-  address: string
-  encrypted: string
-}
-
 export const runtime = "edge"
 
 export default function Page() {
-  const pk = generatePrivateKey()
-
-  console.log({ pk })
-
   const search = useSearchParams()
   const { push } = useRouter()
   const teamId = search.get("teamId") ?? undefined
@@ -44,6 +31,7 @@ export default function Page() {
   const { mutateAsync: login, isPending } = useMutation({
     mutationFn: async () => {
       const uuid = utils.randomChallenge()
+      let user: User | null
 
       let reg = await ls.getItem<RegistrationEncoded>("reg")
 
@@ -58,28 +46,13 @@ export default function Page() {
 
         const id = credential.id
 
-        const secret = new Uint8Array(32)
-        secret.set(new TextEncoder().encode(id))
-
-        const pk = generatePrivateKey()
-
-        const payload: Payload = { pk }
-
-        const address = privateKeyToAddress(pk)
-
-        const encrypted = await new EncryptJWT(payload)
-          .setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256" })
-          .setIssuedAt()
-          .encrypt(secret)
-
-        const user: User = {
+        user = await newUser({
           id,
           teamId,
-          address,
-          encrypted,
-        }
+          role: teamId ? ROLE.CHILD : ROLE.PARENT,
+        })
 
-        if (teamId) {
+        if (user.role === ROLE.CHILD) {
           const team = await supa.getItem<Team>(`team:${teamId}`)
 
           assert(team, "Team not found")
@@ -95,7 +68,13 @@ export default function Page() {
           idb.setItem("auth", user),
         ])
 
-        push("/team/create")
+        if (user.role === ROLE.CHILD) {
+          push(`/team/${teamId}/wallet`)
+        } else if (user.role === ROLE.PARENT) {
+          push(user.teamId ? `/team/${user.teamId}/qr` : "/team/create")
+        }
+
+        toast.success("Successfully logged in!")
 
         return
       }
@@ -104,7 +83,7 @@ export default function Page() {
 
       const id = auth.credentialId
 
-      const user = await supa.getItem<User>(`user:${id}`)
+      user = await supa.getItem<User>(`user:${id}`)
 
       if (!user) {
         toast.error("User not found.")
@@ -114,15 +93,13 @@ export default function Page() {
 
       await idb.setItem("auth", user)
 
-      if (user.teamId) {
-        push(`/team/${user.teamId}/qr`)
+      if (user.role === ROLE.CHILD) {
+        push(`/team/${user.teamId}/wallet`)
       } else {
-        push("/team/create")
+        push(user.teamId ? `/team/${user.teamId}/qr` : "/team/create")
       }
 
-      toast.success("Successfully logged in!", {
-        position: "top-center",
-      })
+      toast.success("Successfully logged in!")
 
       return
     },

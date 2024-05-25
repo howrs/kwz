@@ -54,11 +54,11 @@ export default function RootLayout({ children }: Props) {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
       </head>
-      <body className="flex justify-center">
+      <body className="flex justify-center bg-black/90">
         <Providers>
           <main className="flex h-dvh w-full max-w-screen-sm justify-center bg-background">
             {children}
-            <Toaster richColors />
+            <Toaster richColors position="top-center" />
           </main>
         </Providers>
       </body>

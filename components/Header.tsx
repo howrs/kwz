@@ -12,14 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "components/ui/dropdown-menu"
 import { useAuth } from "hooks/useAuth"
-import { useTeam } from "hooks/useTeam"
 import { idb } from "lib/idb"
-import { LogOut, QrCode, Wallet } from "lucide-react"
+import { LogOut, QrCode, Store, Trophy, Wallet } from "lucide-react"
+import { ROLE } from "model/User/User"
 import Link from "next/link"
 
 export function Header() {
   const { user } = useAuth()
-  const { team } = useTeam()
+  const teamId = user.teamId
 
   const key = user.id.slice(0, 100)
   const client = useQueryClient()
@@ -39,18 +39,36 @@ export function Header() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-auto" align="end">
           <DropdownMenuGroup>
+            {user.role === ROLE.CHILD && (
+              <>
+                <DropdownMenuItem asChild>
+                  <Link href={`/team/${teamId}/missions`}>
+                    <Trophy className="mr-2 h-4 w-4" />
+                    <span>Missions</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={`/store`}>
+                    <Store className="mr-2 h-4 w-4" />
+                    <span>Store</span>
+                  </Link>
+                </DropdownMenuItem>
+              </>
+            )}
             <DropdownMenuItem asChild>
-              <Link href={`/team/${team.id}/wallet`}>
+              <Link href={`/team/${teamId}/wallet`}>
                 <Wallet className="mr-2 h-4 w-4" />
                 <span>Wallet</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href={`/team/${team.id}/qr`}>
-                <QrCode className="mr-2 h-4 w-4" />
-                <span>QR Code</span>
-              </Link>
-            </DropdownMenuItem>
+            {user.role === ROLE.PARENT && (
+              <DropdownMenuItem asChild>
+                <Link href={`/team/${teamId}/qr`}>
+                  <QrCode className="mr-2 h-4 w-4" />
+                  <span>QR Code</span>
+                </Link>
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem

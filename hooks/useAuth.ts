@@ -1,9 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
-import type { Payload, User } from "app/login/page"
+import type { Payload } from "app/login/page"
 import { jwtDecrypt } from "jose"
-import { assert } from "lib/assert"
 import { idb } from "lib/idb"
+import type { User } from "model/User/User"
 import { useRouter } from "next-nprogress-bar"
+import { redirect } from "next/navigation"
 
 export const useAuth = () => {
   const { replace } = useRouter()
@@ -14,7 +15,9 @@ export const useAuth = () => {
       try {
         const user = await idb.getItem<User>("auth")
 
-        assert(user)
+        if (!user) {
+          redirect("/login")
+        }
 
         const { encrypted, id } = user
 

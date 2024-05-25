@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
-import type { Team } from "app/team/create/page"
 import { assert } from "lib/assert"
 import { supa } from "lib/supabase/supa"
+import type { Team } from "model/Team/Team"
 import { useParams } from "next/navigation"
 
 type Params = {
