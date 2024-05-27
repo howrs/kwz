@@ -8,11 +8,11 @@ import { bscTestnet } from "wagmi/chains"
 export const config = createConfig({
   chains: [bscTestnet],
   transports: {
-    [bscTestnet.id]: http(),
+    [bscTestnet.id]: http(`https://data-seed-prebsc-2-s3.binance.org:8545/`),
   },
 })
 
-type Props = ComponentProps<typeof Wagmi>
+type Props = Omit<ComponentProps<typeof Wagmi>, "config">
 
 export const WagmiProvider = ({ children, ...props }: Props) => {
   return (
