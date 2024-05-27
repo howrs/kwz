@@ -41,7 +41,7 @@ export default function Page() {
 
     await Promise.all([
       supa.setItem(`team:${team.id}`, team),
-      supa.setItem(`user:${user.id}`, { ...user, teamId: team.id }),
+      supa.setItem(`user:${user.id}`, newUser),
       idb.setItem("auth", newUser),
     ])
 

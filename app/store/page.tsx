@@ -14,7 +14,6 @@ export default function Page() {
 
       <h1 className="mt-2 text-4xl">Store</h1>
 
-      {/* Balance */}
       <div className="mt-2 flex w-full justify-end p-2 px-4">
         <div className="flex items-center gap-2 text-2xl">
           <p className="tabular-nums">
@@ -24,11 +23,12 @@ export default function Page() {
           </p>
           <Image
             priority
+            unoptimized
             className="size-6 rounded-full"
-            src="/babydoge.jpg"
             width={100}
             height={100}
-            alt="Baby Doge"
+            alt="TSUD logo"
+            src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
           />
         </div>
       </div>
@@ -52,11 +52,12 @@ export default function Page() {
                     )}
                     <Image
                       priority
+                      unoptimized
                       className="size-5 rounded-full"
-                      src="/babydoge.jpg"
                       width={100}
                       height={100}
-                      alt="Baby Doge"
+                      alt="TSUD logo"
+                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
                     />
                   </div>
                 </Button>
@@ -92,84 +93,68 @@ const PRODUCTS: Product[] = [
   },
   {
     id: "3",
-    name: "바나나 우유",
+    name: "Banana Milk",
     icon: "banana_1f34c",
     price: 300,
   },
   {
     id: "4",
-    name: "오렌지 주스",
+    name: "Orange Juice",
     icon: "tangerine_1f34a",
     price: 400,
   },
   {
     id: "5",
-    name: "레몬에이드",
+    name: "Lemonade",
     icon: "tropical-drink_1f379",
     price: 500,
   },
   {
     id: "6",
-    name: "피자",
+    name: "Pizza",
     icon: "pizza_1f355",
     price: 600,
   },
   {
     id: "7",
-    name: "떡볶이",
+    name: "Tteokbokki",
     icon: "curry-rice_1f35b",
     price: 700,
   },
   {
     id: "8",
-    name: "아이스크림",
+    name: "Ice Cream",
     icon: "ice-cream_1f368",
     price: 800,
   },
   {
     id: "9",
-    name: "핫도그",
+    name: "Hot Dog",
     icon: "hot-dog_1f32d",
     price: 900,
   },
   {
     id: "10",
-    name: "볶음밥",
+    name: "Fried Rice",
     icon: "cooked-rice_1f35a",
     price: 1000,
   },
   {
     id: "11",
-    name: "인형",
+    name: "Doll",
     icon: "teddy-bear_1f9f8",
     price: 1100,
   },
   {
     id: "12",
-    name: "퍼즐",
+    name: "Puzzle",
     icon: "puzzle-piece_1f9e9",
     price: 1200,
   },
   {
     id: "13",
-    name: "로봇",
+    name: "Robot",
     icon: "robot_1f916",
     price: 1300,
   },
 ]
-
-// 뽀로로 음료
-// 딸기우유
-// 바나나 우유
-// 오렌지 주스
-// 레몬에이드
-
-// 피자
-// 떡복이
-// 아이스크림
-// 핫도그
-// 볶음밥
-
-// 슬라임
-// 젠가
-// 로봇

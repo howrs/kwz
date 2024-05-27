@@ -19,72 +19,76 @@ export default function Page() {
       <div className="mt-8 flex w-full items-center justify-center gap-3 text-2xl">
         <Image
           priority
+          unoptimized
           className="size-8 rounded-full"
-          src="/babydoge.jpg"
           width={100}
           height={100}
-          alt="Baby Doge"
+          alt="TSUD logo"
+          src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
         />
         <p className="tabular-nums">
           {Intl.NumberFormat("en-US", {
             currency: "USD",
           }).format(1000)}
         </p>
-        <p className="">BabyDoge</p>
+        <p className="">TUSD</p>
       </div>
 
       <Separator className="mt-12 h-px bg-white/10" />
 
-      <ul className="flex flex-col justify-center">
-        {MISSIONS.map(
-          ({ id, name, description, reward, icon, current, goal }) => (
-            <Fragment key={name}>
-              <li className="flex w-full items-center" key={name}>
-                <Button
-                  className="flex h-auto w-full gap-3 p-4"
-                  variant="ghost"
-                >
-                  <Emoji u={icon} className="size-16" />
+      <section className="w-full flex-1 overflow-y-auto">
+        <ul className="flex flex-col justify-center">
+          {MISSIONS.map(
+            ({ id, name, description, reward, icon, current, goal }) => (
+              <Fragment key={name}>
+                <li className="flex w-full items-center" key={name}>
+                  <Button
+                    className="flex h-auto w-full gap-3 p-4"
+                    variant="ghost"
+                  >
+                    <Emoji u={icon} className="size-16" />
 
-                  <div className="grow text-left">
-                    <h3 className="text-2xl">{name}</h3>
-                    <div className="text-base opacity-60">
-                      <span className="line-clamp-1 text-wrap">
-                        {description}
-                      </span>
+                    <div className="grow text-left">
+                      <h3 className="text-2xl">{name}</h3>
+                      <div className="text-base opacity-60">
+                        <span className="line-clamp-1 text-wrap">
+                          {description}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Progress
+                          className="h-2 max-w-64 flex-1"
+                          value={current}
+                          max={goal}
+                        />
+                        <span className="flex gap-0.5 tabular-nums">
+                          <span className="opacity-50">{current}</span>
+                          <span>/</span>
+                          <span>{goal}</span>
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Progress
-                        className="h-2 max-w-64 flex-1"
-                        value={current}
-                        max={goal}
+
+                    <div className="flex h-full min-w-12 flex-col items-center justify-center gap-1">
+                      <Image
+                        priority
+                        unoptimized
+                        className="size-7 rounded-full"
+                        width={100}
+                        height={100}
+                        alt="TSUD logo"
+                        src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
                       />
-                      <span className="flex gap-0.5 tabular-nums">
-                        <span className="opacity-50">{current}</span>
-                        <span>/</span>
-                        <span>{goal}</span>
-                      </span>
+                      <div className="text-xl tabular-nums">{reward}</div>
                     </div>
-                  </div>
-
-                  <div className="flex h-full min-w-12 flex-col items-center justify-center gap-1">
-                    <Image
-                      priority
-                      className="size-7 rounded-full"
-                      src="/babydoge.jpg"
-                      width={100}
-                      height={100}
-                      alt="Baby Doge"
-                    />
-                    <div className="text-xl tabular-nums">{reward}</div>
-                  </div>
-                </Button>
-              </li>
-              <Separator className="h-px bg-white/10" />
-            </Fragment>
-          ),
-        )}
-      </ul>
+                  </Button>
+                </li>
+                <Separator className="h-px bg-white/10" />
+              </Fragment>
+            ),
+          )}
+        </ul>
+      </section>
     </div>
   )
 }
