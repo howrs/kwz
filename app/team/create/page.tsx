@@ -6,15 +6,15 @@ import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
 import { Input } from "components/ui/input"
 import { useAuth } from "hooks/useAuth"
+import { idb } from "lib/idb"
 import { supa } from "lib/supabase/supa"
 import { newTeam } from "model/Team/newTeam"
 import { useRouter } from "next-nprogress-bar"
-import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 const schema = z.object({
-  name: z.string(),
+  name: z.string().min(3).max(50),
 })
 
 type FormSchema = z.infer<typeof schema>
@@ -37,9 +37,12 @@ export default function Page() {
       creator: user.id,
     })
 
+    const newUser = { ...user, teamId: team.id }
+
     await Promise.all([
       supa.setItem(`team:${team.id}`, team),
       supa.setItem(`user:${user.id}`, { ...user, teamId: team.id }),
+      idb.setItem("auth", newUser),
     ])
 
     push(`/team/${team.id}/qr`)

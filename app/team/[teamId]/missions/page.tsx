@@ -12,8 +12,6 @@ import { Fragment } from "react"
 export const runtime = "edge"
 
 export default function Page() {
-  const { user } = useAuth()
-
   return (
     <div className="flex w-full flex-col">
       <Header />

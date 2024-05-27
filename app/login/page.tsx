@@ -108,7 +108,7 @@ export default function Page() {
   const isLoading = isPending
 
   return (
-    <div className="flex h-full w-full flex-col items-center gap-12 p-2 pt-[30%]">
+    <div className="flex h-full w-full flex-col items-center gap-12 pt-[30%]">
       <Emoji
         u="man-running-light-skin-tone_1f3c3-1f3fb-200d-2642-fe0f"
         className="size-40"
@@ -117,10 +117,11 @@ export default function Page() {
         <Emoji e="👋" n="waving-hand" className="size-10" />
         <h1 className="my-auto mt-2">Welcome to KWZ!</h1>
       </div>
+      <div className="grow" />
       <Button
         type="submit"
         disabled={isLoading}
-        className="relative h-16 w-full text-3xl"
+        className="relative bottom-0 h-16 w-full rounded-none text-3xl"
         onClick={async () => {
           await login()
         }}
