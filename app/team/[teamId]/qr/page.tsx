@@ -6,7 +6,6 @@ import { QRCode } from "app/team/[teamId]/qr/QRCode"
 import { TeamName } from "app/team/[teamId]/qr/TeamName"
 import { Header } from "components/Header"
 import { Button } from "components/ui/button"
-import { useAuth } from "hooks/useAuth"
 import { useTeam } from "hooks/useTeam"
 import { toast } from "sonner"
 import { getBaseURL } from "utils/getBaseURL"
@@ -15,9 +14,6 @@ export const runtime = "edge"
 
 export default function Page() {
   const [, copy] = useCopyToClipboard()
-  const { user } = useAuth()
-
-  const key = user.id.slice(0, 100)
 
   const { team } = useTeam()
 

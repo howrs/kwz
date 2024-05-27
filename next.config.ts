@@ -5,7 +5,6 @@ const config: NextConfig = {
   experimental: {
     // typedRoutes: true,
   },
-
   compiler: {
     // removeConsole: true,
   },

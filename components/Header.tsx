@@ -19,10 +19,26 @@ import Link from "next/link"
 
 export function Header() {
   const { user } = useAuth()
+  const client = useQueryClient()
+
+  if (!user) {
+    return (
+      <header className="flex h-16 w-full items-center justify-between px-1">
+        <div className="flex items-center gap-2 px-3">
+          <Emoji
+            u="man-running-light-skin-tone_1f3c3-1f3fb-200d-2642-fe0f"
+            className="size-8"
+          />
+          <h1 className="font-ink text-3xl">KWZ</h1>
+        </div>
+        <div className="flex aspect-square size-12 animate-pulse rounded-full bg-white opacity-50"></div>
+      </header>
+    )
+  }
+
   const teamId = user.teamId
 
   const key = user.id.slice(0, 100)
-  const client = useQueryClient()
 
   return (
     <header className="flex h-16 w-full items-center justify-between px-1">

@@ -50,15 +50,15 @@ export const QueryProvider = ({ children, ...props }: Props) => {
 
   return (
     <QueryClientProvider {...props} client={client}>
-      <ReactQueryStreamedHydration>
-        {children}
-        <ProgressBar
-          height="3px"
-          color={"hsl(var(--primary))"}
-          options={{ showSpinner: false }}
-          shallowRouting
-        />
-      </ReactQueryStreamedHydration>
+      {/* <ReactQueryStreamedHydration> */}
+      {children}
+      <ProgressBar
+        height="3px"
+        color={"hsl(var(--primary))"}
+        options={{ showSpinner: false }}
+        shallowRouting
+      />
+      {/* </ReactQueryStreamedHydration> */}
 
       {/* {!isProd() && <ReactQueryDevtools initialIsOpen={false} />} */}
     </QueryClientProvider>
