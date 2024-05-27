@@ -69,7 +69,7 @@ export default function Page() {
         ])
 
         if (user.role === ROLE.CHILD) {
-          push(`/team/${teamId}/wallet`)
+          push(`/team/${user.teamId}/missions`)
         } else if (user.role === ROLE.PARENT) {
           push(user.teamId ? `/team/${user.teamId}/qr` : "/team/create")
         }
@@ -94,7 +94,7 @@ export default function Page() {
       await idb.setItem("auth", user)
 
       if (user.role === ROLE.CHILD) {
-        push(`/team/${user.teamId}/wallet`)
+        push(`/team/${user.teamId}/missions`)
       } else {
         push(user.teamId ? `/team/${user.teamId}/qr` : "/team/create")
       }

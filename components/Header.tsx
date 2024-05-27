@@ -71,19 +71,21 @@ export function Header() {
                 </DropdownMenuItem>
               </>
             )}
-            <DropdownMenuItem asChild>
-              <Link href={`/team/${teamId}/wallet`}>
-                <Wallet className="mr-2 h-4 w-4" />
-                <span>Wallet</span>
-              </Link>
-            </DropdownMenuItem>
             {user.role === ROLE.PARENT && (
-              <DropdownMenuItem asChild>
-                <Link href={`/team/${teamId}/qr`}>
-                  <QrCode className="mr-2 h-4 w-4" />
-                  <span>QR Code</span>
-                </Link>
-              </DropdownMenuItem>
+              <>
+                <DropdownMenuItem asChild>
+                  <Link href={`/team/${teamId}/qr`}>
+                    <QrCode className="mr-2 h-4 w-4" />
+                    <span>QR Code</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={`/team/${teamId}/wallet`}>
+                    <Wallet className="mr-2 h-4 w-4" />
+                    <span>Wallet</span>
+                  </Link>
+                </DropdownMenuItem>
+              </>
             )}
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

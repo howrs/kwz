@@ -6,32 +6,39 @@ import { Header } from "components/Header"
 import { Button } from "components/ui/button"
 import { Progress } from "components/ui/progress"
 import { useAuth } from "hooks/useAuth"
+import { KWZ, useTokenBalance } from "hooks/useTokenBalance"
 import Image from "next/image"
 import { Fragment } from "react"
+import { type Address, formatEther } from "viem"
 
 export const runtime = "edge"
 
 export default function Page() {
+  const { user } = useAuth()
+
+  const { data, isPending } = useTokenBalance({
+    address: user?.address! as Address,
+    token: KWZ.ADDRESS,
+  })
+
+  if (isPending) {
+    return null
+  }
+
+  const balance = data!
+
   return (
     <div className="flex w-full flex-col">
       <Header />
 
       <div className="mt-8 flex w-full items-center justify-center gap-3 text-2xl">
-        <Image
-          priority
-          unoptimized
-          className="size-8 rounded-full"
-          width={100}
-          height={100}
-          alt="TSUD logo"
-          src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
-        />
+        <Emoji u="coin_1fa99" className="size-8" />
         <p className="tabular-nums">
           {Intl.NumberFormat("en-US", {
             currency: "USD",
-          }).format(1000)}
+          }).format(+formatEther(balance))}
         </p>
-        <p className="">TUSD</p>
+        <p className="">KWZ</p>
       </div>
 
       <Separator className="mt-12 h-px bg-white/10" />
@@ -58,8 +65,7 @@ export default function Page() {
                       <div className="flex items-center gap-2">
                         <Progress
                           className="h-2 max-w-64 flex-1"
-                          value={current}
-                          max={goal}
+                          value={(current / goal) * 100}
                         />
                         <span className="flex gap-0.5 tabular-nums">
                           <span className="opacity-50">{current}</span>
@@ -69,16 +75,8 @@ export default function Page() {
                       </div>
                     </div>
 
-                    <div className="flex h-full min-w-12 flex-col items-center justify-center gap-1">
-                      <Image
-                        priority
-                        unoptimized
-                        className="size-7 rounded-full"
-                        width={100}
-                        height={100}
-                        alt="TSUD logo"
-                        src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
-                      />
+                    <div className="flex h-full min-w-12 flex-col items-center justify-center">
+                      <Emoji u="coin_1fa99" className="size-8" />
                       <div className="text-xl tabular-nums">{reward}</div>
                     </div>
                   </Button>

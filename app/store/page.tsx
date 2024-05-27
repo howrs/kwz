@@ -1,11 +1,29 @@
+"use client"
+
 import { Emoji } from "app/team/[teamId]/qr/Emoji"
 import { Header } from "components/Header"
 import { Button } from "components/ui/button"
 import { Separator } from "components/ui/separator"
-import Image from "next/image"
+import { useAuth } from "hooks/useAuth"
+import { KWZ, useTokenBalance } from "hooks/useTokenBalance"
 import { Fragment } from "react"
+import { type Address, formatEther } from "viem"
 
 export default function Page() {
+  const { user } = useAuth()
+
+  const { data, isPending } = useTokenBalance({
+    address: user?.address! as Address,
+    token: KWZ.ADDRESS,
+  })
+
+  if (isPending) {
+    return null
+  }
+
+  const address = user?.address! as Address
+  const balance = data!
+
   return (
     <div className="flex h-full w-full flex-col items-center">
       <Header />
@@ -19,17 +37,9 @@ export default function Page() {
           <p className="tabular-nums">
             {Intl.NumberFormat("en-US", {
               currency: "USD",
-            }).format(1000)}
+            }).format(+formatEther(balance))}
           </p>
-          <Image
-            priority
-            unoptimized
-            className="size-6 rounded-full"
-            width={100}
-            height={100}
-            alt="TSUD logo"
-            src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
-          />
+          <Emoji u="coin_1fa99" className="size-6" />
         </div>
       </div>
 
@@ -50,15 +60,7 @@ export default function Page() {
                     {Intl.NumberFormat("en-US", { currency: "USD" }).format(
                       price,
                     )}
-                    <Image
-                      priority
-                      unoptimized
-                      className="size-5 rounded-full"
-                      width={100}
-                      height={100}
-                      alt="TSUD logo"
-                      src="https://s2.coinmarketcap.com/static/img/coins/64x64/2563.png"
-                    />
+                    <Emoji u="coin_1fa99" className="size-5" />
                   </div>
                 </Button>
               </li>
