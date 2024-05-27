@@ -7,7 +7,6 @@ import { Button } from "components/ui/button"
 import { Progress } from "components/ui/progress"
 import { useAuth } from "hooks/useAuth"
 import { KWZ, useTokenBalance } from "hooks/useTokenBalance"
-import Image from "next/image"
 import { Fragment } from "react"
 import { type Address, formatEther } from "viem"
 
