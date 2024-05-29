@@ -1,16 +1,13 @@
-"use client"
-
-import { useTeam } from "hooks/useTeam"
 import { cn } from "lib/utils"
+import type { ComponentProps } from "react"
 import { encode } from "uqr"
-import { getBaseURL } from "utils/getBaseURL"
 
-export function QRCode() {
-  const { team } = useTeam()
+type Props = {
+  str: string
+} & ComponentProps<"section">
 
-  const url = `${getBaseURL()}/login?teamId=${team.id}`
-
-  const { data, size } = encode(url, {
+export function QRCode({ str, className, ...props }: Props) {
+  const { data, size } = encode(str, {
     boostEcc: true,
     ecc: "H",
     border: 0,
@@ -19,7 +16,15 @@ export function QRCode() {
   const BLANK_SIZE = 15
 
   return (
-    <section className="mx-auto w-fit bg-white p-0.5">
+    <section
+      className={cn(
+        "mx-auto grid size-64 bg-white p-0.5",
+        `grid-cols-${size}`,
+        `grid-rows-${size}`,
+        className,
+      )}
+      {...props}
+    >
       {data.map((row, i) => (
         <div key={i} className="flex justify-center">
           {row.map((cell, j) => {
@@ -29,7 +34,9 @@ export function QRCode() {
               j >= size / 2 - BLANK_SIZE / 2 &&
               j < size / 2 + BLANK_SIZE / 2
             ) {
-              return <div key={`${i}-${j}`} className="size-1.5 bg-white" />
+              return (
+                <div key={`${i}-${j}`} className="aspect-square bg-white" />
+              )
             }
 
             // isMarker
@@ -41,7 +48,10 @@ export function QRCode() {
               return (
                 <div
                   key={`${i}-${j}`}
-                  className={cn(`size-1.5`, cell ? "bg-black" : "bg-white")}
+                  className={cn(
+                    `aspect-square`,
+                    cell ? "bg-black" : "bg-white",
+                  )}
                 />
               )
             }
@@ -50,7 +60,7 @@ export function QRCode() {
               <div
                 key={`${i}-${j}`}
                 className={cn(
-                  `size-1.5 rounded-full`,
+                  `aspect-square rounded-full`,
                   cell ? "bg-black" : "bg-white",
                 )}
               />

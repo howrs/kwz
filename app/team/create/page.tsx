@@ -1,32 +1,26 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Emoji } from "app/team/[teamId]/qr/Emoji"
 import { Loader } from "components/Loader"
 import { Button } from "components/ui/button"
 import { Input } from "components/ui/input"
 import { useAuth } from "hooks/useAuth"
-import { nanoid } from "lib/nanoid"
+import { idb } from "lib/idb"
 import { supa } from "lib/supabase/supa"
+import { newTeam } from "model/Team/newTeam"
 import { useRouter } from "next-nprogress-bar"
-import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 const schema = z.object({
-  name: z.string(),
+  name: z.string().min(3).max(50),
 })
 
 type FormSchema = z.infer<typeof schema>
 
-export type Team = {
-  id: string
-  name: string
-  creator: string
-  members: string[]
-}
-
 export default function Page() {
-  const { pk, user } = useAuth()
+  const { user } = useAuth()
   const { push } = useRouter()
 
   const {
@@ -38,19 +32,20 @@ export default function Page() {
   })
 
   const onSubmit = handleSubmit(async ({ name }) => {
-    const team: Team = {
-      id: nanoid(),
+    const team = newTeam({
       name,
       creator: user.id,
-      members: [],
-    }
+    })
+
+    const newUser = { ...user, teamId: team.id }
 
     await Promise.all([
       supa.setItem(`team:${team.id}`, team),
-      supa.setItem(`user:${user.id}`, { ...user, teamId: team.id }),
+      supa.setItem(`user:${user.id}`, newUser),
+      idb.setItem("auth", newUser),
     ])
 
-    push(`/team/${team.id}`)
+    push(`/team/${team.id}/qr`)
   })
 
   return (
@@ -58,17 +53,14 @@ export default function Page() {
       <h1 className="mt-[20%] text-center font-extrabold font-ink text-5xl">
         Hello, parents!
       </h1>
-      <Image
-        priority
-        unoptimized
-        src={`https://em-content.zobj.net/source/microsoft-teams/363/woman_light-skin-tone_1f469-1f3fb_1f3fb.png`}
+      <Emoji
+        u="woman_light-skin-tone_1f469-1f3fb_1f3fb"
         className="mx-auto size-40"
-        width={120}
-        height={120}
-        alt="👋"
       />
       <h2 className="text-center font-ink text-3xl">
-        Let's create a team for your child!
+        Let's create a team
+        <br />
+        for your child!
       </h2>
       <div className="grid gap-4">
         <Input

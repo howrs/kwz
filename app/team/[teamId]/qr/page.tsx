@@ -1,17 +1,23 @@
 "use client"
 
+import { useCopyToClipboard } from "@uidotdev/usehooks"
 import { Emoji } from "app/team/[teamId]/qr/Emoji"
 import { QRCode } from "app/team/[teamId]/qr/QRCode"
 import { TeamName } from "app/team/[teamId]/qr/TeamName"
 import { Header } from "components/Header"
-import { useAuth } from "hooks/useAuth"
+import { Button } from "components/ui/button"
+import { useTeam } from "hooks/useTeam"
+import { toast } from "sonner"
+import { getBaseURL } from "utils/getBaseURL"
 
 export const runtime = "edge"
 
 export default function Page() {
-  const { user } = useAuth()
+  const [, copy] = useCopyToClipboard()
 
-  const key = user.id.slice(0, 100)
+  const { team } = useTeam()
+
+  const url = `${getBaseURL()}/login?teamId=${team.id}`
 
   return (
     <div className="flex w-full flex-col gap-8">
@@ -41,28 +47,28 @@ export default function Page() {
         <h2 className="text-center">to join the team!</h2>
       </div>
 
-      <div className="relative">
-        <QRCode />
-        {/* fire */}
-        {/* <Emoji e="🔥" n="fire" className="absolute inset-0 m-auto size-24" /> */}
-        {/* rainbow */}
-        {/* <Emoji e="🌈" n="rainbow" className="absolute inset-0 m-auto size-24" /> */}
-        {/* unicorn */}
-        {/* <Emoji e="🦄" n="unicorn" className="absolute inset-0 m-auto size-24" /> */}
-        {/* orange-heart */}
-        <Emoji
-          e="🧡"
-          n="orange-heart"
-          className="absolute inset-0 m-auto size-20"
-        />
-        {/* two hearts */}
-      </div>
+      <div className="flex flex-col gap-2 text-center">
+        <div className="relative">
+          <QRCode str={url} className="size-64" />
+          <Emoji
+            e="🧡"
+            n="orange-heart"
+            className="absolute inset-0 m-auto size-24"
+          />
+        </div>
 
-      {/* <div className="grid grid-cols-6 gap-2">
-        {EMOJIS.map(({ url, n }, i) => (
-          <Avatar key={n} k={`${i}`} />
-        ))}
-      </div> */}
+        <Button
+          className="cursor-pointer text-xs"
+          variant="link"
+          onClick={async () => {
+            await copy(url)
+
+            toast.success("Copied to clipboard!")
+          }}
+        >
+          {url}
+        </Button>
+      </div>
     </div>
   )
 }
