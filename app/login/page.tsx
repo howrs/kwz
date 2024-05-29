@@ -1,7 +1,5 @@
 "use client"
 
-import { client, parsers, utils } from "@passwordless-id/webauthn"
-import type { RegistrationEncoded } from "@passwordless-id/webauthn/dist/esm/types"
 import { useMutation } from "@tanstack/react-query"
 import { Emoji } from "app/team/[teamId]/qr/Emoji"
 import { Loader } from "components/Loader"
@@ -30,60 +28,28 @@ export default function Page() {
 
   const { mutateAsync: login, isPending } = useMutation({
     mutationFn: async () => {
-      const uuid = utils.randomChallenge()
-      let user: User | null
+      const uuid = new TextEncoder().encode(crypto.randomUUID())
 
-      let reg = await ls.getItem<RegistrationEncoded>("reg")
+      let auth: Credential | null
 
-      if (!reg) {
-        reg = await client.register("KWZ", uuid)
-
-        ls.setItem("reg", reg)
-
-        const parsed = parsers.parseRegistration(reg)
-
-        const { credential } = parsed
-
-        const id = credential.id
-
-        user = await newUser({
-          id,
-          teamId,
-          role: teamId ? ROLE.CHILD : ROLE.PARENT,
+      try {
+        auth = await navigator.credentials.get({
+          publicKey: {
+            challenge: uuid,
+            rpId: window.location.hostname,
+            userVerification: "preferred",
+          },
         })
-
-        if (user.role === ROLE.CHILD) {
-          const team = await supa.getItem<Team>(`team:${teamId}`)
-
-          assert(team, "Team not found")
-
-          await supa.setItem(`team:${teamId}`, {
-            ...team,
-            members: [...team.members, id],
-          })
-        }
-
-        await Promise.all([
-          supa.setItem(`user:${id}`, user),
-          idb.setItem("auth", user),
-        ])
-
-        if (user.role === ROLE.CHILD) {
-          push(`/team/${user.teamId}/missions`)
-        } else if (user.role === ROLE.PARENT) {
-          push(user.teamId ? `/team/${user.teamId}/qr` : "/team/create")
-        }
-
-        toast.success("Successfully logged in!")
-
+      } catch (e) {
+        console.error(e)
         return
       }
 
-      const auth = await client.authenticate([reg.credential.id], uuid)
+      assert(auth?.id, "Credential not found")
 
-      const id = auth.credentialId
+      const id = auth.id
 
-      user = await supa.getItem<User>(`user:${id}`)
+      const user = await supa.getItem<User>(`user:${id}`)
 
       if (!user) {
         toast.error("User not found.")
@@ -105,7 +71,77 @@ export default function Page() {
     },
   })
 
-  const isLoading = isPending
+  const { mutateAsync: register, isPending: isPending2 } = useMutation({
+    mutationFn: async () => {
+      const uuid = new TextEncoder().encode(crypto.randomUUID())
+      let user: User | null
+
+      const name = `KWZ (${`${new Date().toISOString()}`
+        .slice(0, 16)
+        .replace("T", " ")})`
+
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          attestation: "direct",
+          challenge: uuid,
+          rp: {
+            id: window.location.hostname,
+            name: window.location.hostname,
+          },
+          authenticatorSelection: {
+            userVerification: "preferred",
+            residentKey: "required",
+            requireResidentKey: true,
+          },
+          extensions: {
+            credProps: true,
+          },
+          user: {
+            id: uuid,
+            name: name,
+            displayName: name,
+          },
+          pubKeyCredParams: [{ alg: -7, type: "public-key" }],
+        },
+      })
+
+      const id = credential?.id
+
+      assert(id, "Credential ID not found")
+
+      user = await newUser({
+        id,
+        teamId,
+        role: teamId ? ROLE.CHILD : ROLE.PARENT,
+      })
+
+      if (user.role === ROLE.CHILD) {
+        const team = await supa.getItem<Team>(`team:${teamId}`)
+
+        assert(team, "Team not found")
+
+        await supa.setItem(`team:${teamId}`, {
+          ...team,
+          members: [...team.members, id],
+        })
+      }
+
+      await Promise.all([
+        supa.setItem(`user:${id}`, user),
+        idb.setItem("auth", user),
+      ])
+
+      if (user.role === ROLE.CHILD) {
+        push(`/team/${user.teamId}/missions`)
+      } else if (user.role === ROLE.PARENT) {
+        push(user.teamId ? `/team/${user.teamId}/qr` : "/team/create")
+      }
+
+      toast.success("Successfully logged in!")
+    },
+  })
+
+  const isLoading = isPending || isPending2
 
   return (
     <div className="flex h-full w-full flex-col items-center gap-12 pt-[30%]">
@@ -118,16 +154,31 @@ export default function Page() {
         <h1 className="my-auto mt-2">Welcome to KWZ!</h1>
       </div>
       <div className="grow" />
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="relative bottom-0 h-16 w-full rounded-none text-3xl"
-        onClick={async () => {
-          await login()
-        }}
-      >
-        {isLoading ? <Loader className="size-8" /> : "Continue"}
-      </Button>
+      <div className="flex w-full flex-col items-center gap-2">
+        {!teamId && (
+          <Button
+            className="w-fit"
+            variant="ghost"
+            disabled={isLoading}
+            onClick={async () => {
+              await register()
+            }}
+          >{`I don't have an account`}</Button>
+        )}
+        <Button
+          disabled={isLoading}
+          className="relative bottom-0 h-16 w-full rounded-none text-3xl"
+          onClick={async () => {
+            if (teamId) {
+              await register()
+            } else {
+              await login()
+            }
+          }}
+        >
+          {isLoading ? <Loader className="size-8" /> : "Continue"}
+        </Button>
+      </div>
     </div>
   )
 }
