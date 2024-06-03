@@ -91,6 +91,12 @@ export function Header() {
                     <span>Missions</span>
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={`/team/${teamId}/store`}>
+                    <Trophy className="mr-2 h-4 w-4" />
+                    <span>Store</span>
+                  </Link>
+                </DropdownMenuItem>
               </>
             )}
           </DropdownMenuGroup>
