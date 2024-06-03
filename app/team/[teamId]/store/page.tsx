@@ -6,10 +6,9 @@ import { Header } from "components/Header"
 import { Button } from "components/ui/button"
 import { Progress } from "components/ui/progress"
 import { useAuth } from "hooks/useAuth"
-import { KWZ, missionManagerContract, useTokenBalance } from "hooks/useTokenBalance"
+import { KWZ, useTokenBalance } from "hooks/useTokenBalance"
 import { Fragment } from "react"
 import { type Address, formatEther } from "viem"
-import { getMissionList } from "hooks/useTokenBalance"
 
 export const runtime = "edge"
 
@@ -20,13 +19,6 @@ export default function Page() {
     address: user?.address! as Address,
     token: KWZ.ADDRESS,
   })
-
-  const missionList = getMissionList({
-    walletAddress: user?.address as Address,
-    contractAddress: missionManagerContract,
-  })
-  console.log("missionList")
-  console.log(missionList)
 
   if (isPending) {
     return null
@@ -107,8 +99,6 @@ type Mission = {
   current: number
   goal: number
 }
-
-// const MISSIONS: Mission[] = getMissionList()
 
 const MISSIONS: Mission[] = [
   {

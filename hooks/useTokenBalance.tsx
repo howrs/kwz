@@ -1,9 +1,15 @@
+import { missionManagerAbi } from "hooks/abis"
 import { type Address, erc20Abi } from "viem"
 import { useReadContract } from "wagmi"
 
 type Params = {
   address: Address
   token: Address
+}
+
+type MissionParam = {
+  walletAddress: Address
+  contractAddress: Address
 }
 
 export const TUSD = {
@@ -18,6 +24,8 @@ export const KWZ = {
   SYMBOL: "KWZ",
 }
 
+export const missionManagerContract: Address = "0xC745295a144548B25d2a71d6A680cbf363C7c67B";
+
 export function useTokenBalance({ address, token }: Params) {
   return useReadContract({
     address: token,
@@ -26,6 +34,18 @@ export function useTokenBalance({ address, token }: Params) {
     args: [address],
     query: {
       enabled: !!address && !!token,
+    },
+  })
+}
+
+export function getMissionList({ walletAddress, contractAddress}: MissionParam) {
+  return useReadContract({
+    address: contractAddress,
+    abi: missionManagerAbi,
+    functionName: "getMissionList",
+    args: [walletAddress],
+    query: {
+      enabled: !!walletAddress && !!contractAddress,
     },
   })
 }
