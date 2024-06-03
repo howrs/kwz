@@ -45,31 +45,20 @@ export default function Page() {
       <section className="w-full flex-1 overflow-y-auto">
         <ul className="flex flex-col justify-center">
           {MISSIONS.map(
-            ({ id, name, description, reward, icon, current, goal }) => (
+            ({ id, name, description, reward, image, icon, current, goal }) => (
               <Fragment key={name}>
                 <li className="flex w-full items-center" key={name}>
                   <Button
                     className="flex h-auto w-full gap-3 p-4"
                     variant="ghost"
                   >
-                    <Emoji u={icon} className="size-16" />
+                    <img src={image} width={150} height={150} />
 
                     <div className="grow text-left">
                       <h3 className="text-2xl">{name}</h3>
                       <div className="text-base opacity-60">
                         <span className="line-clamp-1 text-wrap">
                           {description}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Progress
-                          className="h-2 max-w-64 flex-1"
-                          value={(current / goal) * 100}
-                        />
-                        <span className="flex gap-0.5 tabular-nums">
-                          <span className="opacity-50">{current}</span>
-                          <span>/</span>
-                          <span>{goal}</span>
                         </span>
                       </div>
                     </div>
@@ -90,60 +79,46 @@ export default function Page() {
   )
 }
 
-type Mission = {
+type StoreItem = {
   id: string
   name: string
   description: string
   reward: number
+  image: string
   icon: string
   current: number
   goal: number
 }
 
-const MISSIONS: Mission[] = [
+const MISSIONS: StoreItem[] = [
   {
     id: "1",
-    name: "Steps",
-    description: "Do something",
+    name: "Banana milk",
+    description: "Delicious Banana Milk <3",
     reward: 100,
+    image: "/banana.png",
     icon: "man-walking-light-skin-tone_1f6b6-1f3fb-200d-2642-fe0f",
     current: 10,
     goal: 10,
   },
   {
     id: "2",
-    name: "Calories",
-    description: "Do something else",
+    name: "Orange Juice",
+    description: "Fresh orange juice!",
     reward: 200,
+    image: "/orange.png",
     icon: "fire_1f525",
     current: 10,
     goal: 20,
   },
   {
     id: "3",
-    name: "Time Attack",
-    description: "Do something else again",
+    name: "Strawberry Milk",
+    description: "Sweet Strawberry milk!",
     reward: 300,
+    image: "/strawberry.png",
     icon: "stopwatch_23f1-fe0f",
     current: 5,
     goal: 30,
-  },
-  {
-    id: "4",
-    name: "Bridge Play",
-    description: "Do something else again 12312312123",
-    reward: 400,
-    icon: "person-running_1f3c3",
-    current: 25,
-    goal: 40,
-  },
-  {
-    id: "5",
-    name: "Climbing",
-    description: "Do something else again",
-    reward: 500,
-    icon: "woman-climbing-light-skin-tone_1f9d7-1f3fb-200d-2640-fe0f",
-    current: 42,
-    goal: 50,
   },
 ]

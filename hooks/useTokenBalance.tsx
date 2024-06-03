@@ -13,13 +13,13 @@ type MissionParam = {
 }
 
 export const TUSD = {
-  ADDRESS: "0xbf29146F8bC461d101D9Aa755cb84EfCF527Bd9d" as Address,
+  ADDRESS: "0x5813519f145D04DBDEd0fe9b901D6256BD951D11" as Address,
   name: "TrueUSD",
   SYMBOL: "TUSD",
 }
 
 export const KWZ = {
-  ADDRESS: `0xbf4D6BC5793Fb20e588461783f508F27F87275E1` as Address,
+  ADDRESS: `0x05C52e62cCb5c0681E364E5f6Ea5c09A7946348C` as Address,
   name: "KWZ",
   SYMBOL: "KWZ",
 }
